@@ -19,8 +19,6 @@
       margin: auto;
       width: 400px;
       margin-top: 15px;
-      /* Ensure visible */
-      display: none;
     }
     select, button {
       margin: 5px;
@@ -74,15 +72,17 @@
     <div>♟ Black Time: <span id="time-b">--:--</span></div>
   </div>
 
-  <div id="board"></div>
+  <div id="board" style="display:none;"></div>
 
   <h3>Move History</h3>
   <div id="history"></div>
 
   <!-- Dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/chess.js"></script>
+  <!-- Updated chess.js for browser -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chessboard@1.0.0/dist/chessboard.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/stockfish@16/stockfish.wasm.js"></script>
+  <!-- Local or alternative Stockfish .wasm -->
+  <script src="https://numberoneskidder.github.io/assets/stockfish/stockfish.wasm.js"></script>
 
   <script>
     let board, game, engine;
@@ -119,17 +119,12 @@
         playerColor = colorChoice;
       }
 
-      try {
-        board = Chessboard('board', {
-          draggable: true,
-          position: 'start',
-          onDrop: onDrop,
-          orientation: playerColor === 'w' ? 'white' : 'black'
-        });
-        console.log('Chessboard initialized');
-      } catch (e) {
-        console.error('Failed to initialize chessboard:', e);
-      }
+      board = Chessboard('board', {
+        draggable: true,
+        position: 'start',
+        onDrop: onDrop,
+        orientation: playerColor === 'w' ? 'white' : 'black'
+      });
 
       // Timers
       const min = parseInt(document.getElementById('timer').value);
@@ -140,7 +135,7 @@
 
       // Engine
       if (engine) engine.terminate();
-      engine = new Worker('https://cdn.jsdelivr.net/npm/stockfish@16/stockfish.wasm.js');
+      engine = new Worker('https://numberoneskidder.github.io/assets/stockfish/stockfish.wasm.js');
       engine.postMessage('uci');
       engine.onmessage = e => {
         const line = typeof e.data === 'string' ? e.data : new TextDecoder().decode(e.data);

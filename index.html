@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Chess vs Stockfish</title>
-  <script src="https://cdn.jsdelivr.net/npm/chess.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chessboard@1.0.0/dist/chessboard.css">
-  <script src="https://cdn.jsdelivr.net/npm/chessboard@1.0.0/dist/chessboard.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chessboard@1.0.0/dist/chessboard.css" />
   <style>
     body {
       background: #222;
@@ -19,6 +17,8 @@
     }
     #board {
       margin: auto;
+      width: 400px;
+      margin-top: 15px;
     }
     select, button {
       margin: 5px;
@@ -27,6 +27,7 @@
     #history {
       margin-top: 10px;
       white-space: pre-wrap;
+      min-height: 50px;
     }
     #players {
       margin-bottom: 10px;
@@ -37,8 +38,6 @@
   <h2>Chess vs Stockfish</h2>
 
   <div id="controls">
-    <button onclick="startGame()">♻ Restart</button>
-
     <label>🎯 Difficulty:
       <select id="difficulty">
         <option value="5">Easy</option>
@@ -64,17 +63,24 @@
       </select>
     </label>
 
-    <button onclick="exportPGN()">⬇ Export PGN</button>
+    <button id="startBtn">▶ Start Game</button>
+    <button id="exportBtn" style="display:none;">⬇ Export PGN</button>
   </div>
 
-  <div id="players">
+  <div id="players" style="display:none;">
     <div>♙ White Time: <span id="time-w">--:--</span></div>
     <div>♟ Black Time: <span id="time-b">--:--</span></div>
   </div>
 
-  <div id="board" style="width: 400px;"></div>
+  <div id="board" style="display:none;"></div>
+
   <h3>Move History</h3>
   <div id="history"></div>
+
+  <!-- Dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/chess.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chessboard@1.0.0/dist/chessboard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stockfish@16/stockfish.wasm.js"></script>
 
   <script>
     let board, game, engine;
@@ -86,6 +92,18 @@
       const s = Math.floor(ms / 1000);
       return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
     }
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      startGame();
+      document.getElementById('startBtn').style.display = 'none';
+      document.getElementById('exportBtn').style.display = 'inline-block';
+      document.getElementById('players').style.display = 'block';
+      document.getElementById('board').style.display = 'block';
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      exportPGN();
+    });
 
     function startGame() {
       clearInterval(timerInterval);
@@ -132,7 +150,6 @@
 
       // If AI starts
       if (playerColor === 'b') {
-        // Let Stockfish make the first move
         engine.postMessage(`position fen ${game.fen()}`);
         engine.postMessage(`go depth ${document.getElementById('difficulty').value}`);
       }
@@ -187,11 +204,6 @@
       a.click();
       URL.revokeObjectURL(url);
     }
-
-    window.onload = startGame;
-  </script> <script src="https://cdn.jsdelivr.net/npm/chess.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chessboard@1.0.0/dist/chessboard.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/stockfish@16/stockfish.wasm.js"></script>
-
+  </script>
 </body>
 </html>

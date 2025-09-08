@@ -5,7 +5,7 @@
   <title>Chess vs Stockfish</title>
   <link
     rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/chessboardjs@1.0.0/dist/chessboard.min.css"
+    href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css"
   />
   <style>
     body {
@@ -85,8 +85,9 @@
   <div id="history"></div>
 
   <!-- Dependencies -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chessboardjs@1.0.0/dist/chessboard.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chess.js@0.13.4/chess.min.js"></script>
+  <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
 
   <script>
     let board, game, engine;
@@ -139,7 +140,7 @@
 
       // Engine
       if (engine) engine.terminate();
-      engine = new Worker('https://cdn.jsdelivr.net/npm/stockfish@16.0.0/stockfish.js');
+      engine = new Worker('https://cdn.jsdelivr.net/npm/stockfish@16.1.0/stockfish.js');
       engine.postMessage('uci');
 
       engine.onmessage = e => {
